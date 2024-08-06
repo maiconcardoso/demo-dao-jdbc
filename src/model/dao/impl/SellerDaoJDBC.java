@@ -11,7 +11,7 @@ import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
 
-public class SellerDaoJDBC implements SellerDao{
+public class SellerDaoJDBC implements SellerDao {
 
     private Connection conn;
 
@@ -21,27 +21,27 @@ public class SellerDaoJDBC implements SellerDao{
 
     @Override
     public void insert(Seller obj) {
-       
+
     }
 
     @Override
     public void update(Seller obj) {
-        
+
     }
 
     @Override
     public void deleteById(Integer id) {
-        
+
     }
 
     @Override
     public Seller findById(Integer id) {
         PreparedStatement st = null;
         ResultSet rs = null;
-        String sql = "SELECT seller.*, department.Name " + 
-                    "as DepName FROM seller INNER JOIN department " + 
-                    "ON seller.DepartmentId = department.Id " + 
-                    "WHERE seller.id = ?";
+        String sql = "SELECT seller.*, department.Name " +
+                "as DepName FROM seller INNER JOIN department " +
+                "ON seller.DepartmentId = department.Id " +
+                "WHERE seller.id = ?";
 
         try {
             st = conn.prepareStatement(sql);
@@ -49,22 +49,32 @@ public class SellerDaoJDBC implements SellerDao{
             rs = st.executeQuery();
 
             if (rs.next()) {
-                Department dep = new Department();
-                dep.setId(rs.getInt("DepartmentId"));
-                dep.setName(rs.getString("DepName"));
-                Seller obj = new Seller();
-                obj.setId(rs.getInt("Id"));
-                obj.setName(rs.getString("Name"));
-                obj.setEmail(rs.getString("Email"));
-                obj.setBaseSalary(rs.getDouble("BaseSalary"));
-                obj.setBirthDate(rs.getDate("BirthDate"));
-                obj.setDepartment(dep);
+                Department dep = instantiateDepartment(rs);
+                Seller obj = instantiateSeller(rs, dep);
                 return obj;
             }
             return null;
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
-        } 
+        }
+    }
+
+    private Department instantiateDepartment(ResultSet rs) throws SQLException {
+        Department dep = new Department();
+        dep.setId(rs.getInt("DepartmentId"));
+        dep.setName(rs.getString("DepName"));
+        return dep;
+    }
+
+    private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException {
+        Seller obj = new Seller();
+        obj.setId(rs.getInt("Id"));
+        obj.setName(rs.getString("Name"));
+        obj.setEmail(rs.getString("Email"));
+        obj.setBaseSalary(rs.getDouble("BaseSalary"));
+        obj.setBirthDate(rs.getDate("BirthDate"));
+        obj.setDepartment(dep);
+        return obj;
     }
 
     @Override
@@ -72,6 +82,5 @@ public class SellerDaoJDBC implements SellerDao{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
-
 
 }
