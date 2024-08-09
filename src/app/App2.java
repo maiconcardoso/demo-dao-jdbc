@@ -25,5 +25,11 @@ public class App2 {
         }
         System.out.println();
 
+        System.out.println("=== TEST 3: Department insert ===");
+        Department dep3 = new Department(null, "Usados");
+        departmentDao.insert(dep3);
+        System.out.println("Inserted! new departmet: " + dep3.getName());
+        System.out.println();
+
     }
 }

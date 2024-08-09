@@ -20,9 +20,17 @@ public class DepartmentDaoJDBC implements DepartmentDao{
     }
 
     @Override
-    public void insert(Department obj) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'insert'");
+    public void insert(Department department) {
+        PreparedStatement st = null;
+        String sql = "INSERT INTO department (name) VALUES (?)";
+        
+        try {
+            st = conn.prepareStatement(sql);
+            st.setString(1, department.getName());
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DbException("Error: " +e.getMessage());
+        }
     }
 
     @Override
