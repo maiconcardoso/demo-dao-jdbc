@@ -12,9 +12,10 @@ public class App2 {
        // Scanner sc = new Scanner(System.in);
         
         DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
+        Department department = new Department();
 
         System.out.println("=== TEST 1: Department findById ===");
-        Department department = departmentDao.findById(2);
+        department = departmentDao.findById(2);
         System.out.println(department);
         System.out.println();
 
@@ -26,10 +27,19 @@ public class App2 {
         System.out.println();
 
         System.out.println("=== TEST 3: Department insert ===");
-        Department dep3 = new Department(null, "Usados");
-        departmentDao.insert(dep3);
-        System.out.println("Inserted! new departmet: " + dep3.getName());
+        department = new Department(null, "Usados");
+        //departmentDao.insert(department);
+        System.out.println("Inserted! new departmet: " + department.getName());
         System.out.println();
+
+        System.out.println("=== TEST 4: Department update ===");
+        department = departmentDao.findById(6);
+        department.setName("Novos");
+        departmentDao.update(department);
+        System.out.println("Updated! " + department.getName());
+        System.out.println();
+
+
 
     }
 }
